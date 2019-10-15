@@ -11,14 +11,9 @@ builds:
 
 dockers:
   - image_templates:
-      - "hipages/php-fpm_exporter:latest"
-      - "hipages/php-fpm_exporter:{{ .Major }}.{{ .Minor }}.{{ .Patch }}"
-      - "hipages/php-fpm_exporter:{{ .Major }}.{{ .Minor }}"
-      - "hipages/php-fpm_exporter:{{ .Major }}"
+      - "peopleperhour/php-fpm_exporter:latest"
     build_flag_templates:
-      - "--build-arg=VERSION={{.Version}}"
-      - "--build-arg=BUILD_DATE={{.Date}}"
-      - "--build-arg=VCS_REF={{.FullCommit}}"
+      - "--build-arg=VERSION=pph"
 
 archive:
   format: binary

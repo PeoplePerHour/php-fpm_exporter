@@ -15,6 +15,7 @@
 package phpfpm
 
 import (
+	"os"
 	"sync"
 
 	"github.com/prometheus/client_golang/prometheus"
@@ -54,115 +55,119 @@ type Exporter struct {
 
 // NewExporter creates a new Exporter for a PoolManager and configures the necessary metrics.
 func NewExporter(pm PoolManager) *Exporter {
+
+	app := os.Getenv("SERVICE")
+	ns := app+"_"+namespace
+
 	return &Exporter{
 		PoolManager: pm,
 
 		CountProcessState: false,
 
 		up: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "", "up"),
+			prometheus.BuildFQName(ns, "", "up"),
 			"Could PHP-FPM be reached?",
 			[]string{"pool"},
 			nil),
 
 		scrapeFailues: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "", "scrape_failures"),
+			prometheus.BuildFQName(ns, "", "scrape_failures"),
 			"The number of failures scraping from PHP-FPM.",
 			[]string{"pool"},
 			nil),
 
 		startSince: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "", "start_since"),
+			prometheus.BuildFQName(ns, "", "start_since"),
 			"The number of seconds since FPM has started.",
 			[]string{"pool"},
 			nil),
 
 		acceptedConnections: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "", "accepted_connections"),
+			prometheus.BuildFQName(ns, "", "accepted_connections"),
 			"The number of requests accepted by the pool.",
 			[]string{"pool"},
 			nil),
 
 		listenQueue: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "", "listen_queue"),
+			prometheus.BuildFQName(ns, "", "listen_queue"),
 			"The number of requests in the queue of pending connections.",
 			[]string{"pool"},
 			nil),
 
 		maxListenQueue: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "", "max_listen_queue"),
+			prometheus.BuildFQName(ns, "", "max_listen_queue"),
 			"The maximum number of requests in the queue of pending connections since FPM has started.",
 			[]string{"pool"},
 			nil),
 
 		listenQueueLength: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "", "listen_queue_length"),
+			prometheus.BuildFQName(ns, "", "listen_queue_length"),
 			"The size of the socket queue of pending connections.",
 			[]string{"pool"},
 			nil),
 
 		idleProcesses: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "", "idle_processes"),
+			prometheus.BuildFQName(ns, "", "idle_processes"),
 			"The number of idle processes.",
 			[]string{"pool"},
 			nil),
 
 		activeProcesses: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "", "active_processes"),
+			prometheus.BuildFQName(ns, "", "active_processes"),
 			"The number of active processes.",
 			[]string{"pool"},
 			nil),
 
 		totalProcesses: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "", "total_processes"),
+			prometheus.BuildFQName(ns, "", "total_processes"),
 			"The number of idle + active processes.",
 			[]string{"pool"},
 			nil),
 
 		maxActiveProcesses: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "", "max_active_processes"),
+			prometheus.BuildFQName(ns, "", "max_active_processes"),
 			"The maximum number of active processes since FPM has started.",
 			[]string{"pool"},
 			nil),
 
 		maxChildrenReached: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "", "max_children_reached"),
+			prometheus.BuildFQName(ns, "", "max_children_reached"),
 			"The number of times, the process limit has been reached, when pm tries to start more children (works only for pm 'dynamic' and 'ondemand').",
 			[]string{"pool"},
 			nil),
 
 		slowRequests: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "", "slow_requests"),
+			prometheus.BuildFQName(ns, "", "slow_requests"),
 			"The number of requests that exceeded your 'request_slowlog_timeout' value.",
 			[]string{"pool"},
 			nil),
 
 		processRequests: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "", "process_requests"),
+			prometheus.BuildFQName(ns, "", "process_requests"),
 			"The number of requests the process has served.",
 			[]string{"pool", "pid_hash"},
 			nil),
 
 		processLastRequestMemory: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "", "process_last_request_memory"),
+			prometheus.BuildFQName(ns, "", "process_last_request_memory"),
 			"The max amount of memory the last request consumed.",
 			[]string{"pool", "pid_hash"},
 			nil),
 
 		processLastRequestCPU: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "", "process_last_request_cpu"),
+			prometheus.BuildFQName(ns, "", "process_last_request_cpu"),
 			"The %cpu the last request consumed.",
 			[]string{"pool", "pid_hash"},
 			nil),
 
 		processRequestDuration: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "", "process_request_duration"),
+			prometheus.BuildFQName(ns, "", "process_request_duration"),
 			"The duration in microseconds of the requests.",
 			[]string{"pool", "pid_hash"},
 			nil),
 
 		processState: prometheus.NewDesc(
-			prometheus.BuildFQName(namespace, "", "process_state"),
+			prometheus.BuildFQName(ns, "", "process_state"),
 			"The state of the process (Idle, Running, ...).",
 			[]string{"pool", "pid_hash", "state"},
 			nil),
