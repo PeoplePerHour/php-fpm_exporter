@@ -13,4 +13,4 @@ LABEL org.label-schema.name="php-fpm_exporter" \
       org.label-schema.vcs-url="https://github.com/PeoplePerHour/php-fpm_exporter" \
       org.label-schema.vendor="pph" \
       org.label-schema.version=$VERSION \
-      org.label-schema.schema-version="1.0"
+      org.label-schema.schema-version="1.1"

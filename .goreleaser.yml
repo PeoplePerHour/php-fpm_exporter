@@ -11,9 +11,6 @@ builds:
 
 dockers:
   - image_templates:
-      - "peopleperhour/php-fpm_exporter:latest"
+      - "peopleperhour/php-fpm_exporter:1.1.1"
     build_flag_templates:
       - "--build-arg=VERSION=pph"
-
-archive:
-  format: binary
